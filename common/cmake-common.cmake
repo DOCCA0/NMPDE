@@ -23,8 +23,6 @@ find_package(Boost 1.72.0 REQUIRED
 message(STATUS "Using the Boost-${Boost_VERSION} configuration found at ${Boost_DIR}")
 message(STATUS)
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(/usr/include/x86_64-linux-gnu)
-
 
 # Locate deal.II and initialize its variables.
 find_package(deal.II 9.5.1 REQUIRED

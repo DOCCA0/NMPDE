@@ -330,9 +330,9 @@ Elliptic::solve()
   // system using the conjugate gradient method.
   SolverCG<Vector<double>> solver(solver_control);
 
-  PreconditionSSOR preconditioner;
-  preconditioner.initialize(
-    system_matrix, PreconditionSOR<SparseMatrix<double>>::AdditionalData(1.0));
+  // PreconditionSSOR<SparseMatrix<double>> preconditioner;
+  // preconditioner.initialize(
+  //   system_matrix, PreconditionSSOR<SparseMatrix<double>>::AdditionalData(1.0));
 
   solver.solve(system_matrix, solution, system_rhs, PreconditionIdentity());
   std::cout << "  " << solver_control.last_step() << " CG iterations"
