@@ -51,3 +51,60 @@ Contributions are welcome. Please open an issue to discuss your ideas or submit 
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+## Study Guide: Source Code Learning Path (Easy to Hard)
+
+This guide provides a recommended order for studying the source code directories, progressing from fundamental concepts to advanced topics.
+
+### Phase 1: Mesh Fundamentals
+1. **src_1D_Mesh** - 1D mesh generation
+   - Simplest starting point to understand deal.II mesh structures
+   
+2. **src_2D_Mesh** - 2D mesh generation
+   - Extension to 2D, understanding mesh refinement
+
+### Phase 2: Steady-State Problems
+3. **src_elliptic_1D** - 1D elliptic equations
+   - Learn finite element assembly and solver basics
+   
+4. **src_elliptic** - 2D elliptic equations
+   - Multi-dimensional extension, matrix assembly
+   
+5. **src_linear_elasticity** - Linear elasticity
+   - Introduction to vector-valued problems
+
+### Phase 3: Time-Dependent Problems
+6. **src_parabolic_neumann_1D** - 1D parabolic equations with Neumann BC
+   - Understanding time discretization schemes
+   
+7. **src_parabolic_neumann** - 2D parabolic equations with Neumann BC
+   - Complete time-dependent problems
+
+### Phase 4: Nonlinear Problems
+8. **src_nonlinear_steady** - Steady-state nonlinear diffusion
+   - Learn Newton iteration methods
+   
+9. **src_nonlinear_td** - Time-dependent nonlinear heat equation
+   - Combining time discretization with nonlinear solvers
+   
+10. **src_fk** - Fisher-Kolmogorov equations
+    - Complex nonlinear reaction-diffusion systems
+
+### Phase 5: Coupled Systems (Expert Level)
+11. **src_stokes** - Steady-state Stokes equations
+    - Saddle point problems and block preconditioners
+    
+12. **src_stokes_td** - Time-dependent Stokes equations
+    - Combining time discretization with coupled systems
+    
+13. **src_stokes_si_td** - Semi-implicit time-dependent Stokes
+    - Advanced time integration schemes
+
+### Phase 6: Advanced Topics
+14. **src_domain_decomposition_1D** - 1D domain decomposition
+    - Parallel algorithm fundamentals
+    
+15. **src_domain_decomposition** - 2D domain decomposition
+    - Complete parallel solving strategies
+
+This progression covers: dimensional scaling → time discretization → nonlinear solving → coupled systems → parallel computing.
