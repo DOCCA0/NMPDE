@@ -12,7 +12,7 @@ int main()
     double h = 0.1;      // Size of each element
 
     // Calculate the number of elements
-    unsigned int num_elements = static_cast<unsigned int>((end - start) / h) + 1;
+    unsigned int num_elements = static_cast<unsigned int>((end - start) / h);
 
     // Create the mesh
     dealii::Triangulation<1> mesh;

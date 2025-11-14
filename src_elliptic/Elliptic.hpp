@@ -59,7 +59,7 @@ public:
 
     // Evaluation.
     virtual double
-    value(const Point<dim> & p, const unsigned int component = 0) const
+    value(const Point<dim> & /*p*/, const unsigned int /*component*/ = 0) const override
     {
        return 1.0;
       
@@ -201,7 +201,7 @@ public:
 
     // Evaluation:
     virtual double
-    value(const Point<dim> &p, const unsigned int /*component*/ = 0) const
+    value(const Point<dim> &p, const unsigned int /*component*/ = 0) const override
     {
       if(p[0]==0.0){
         return -M_PI*p[1];

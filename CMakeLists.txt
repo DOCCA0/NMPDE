@@ -1,4 +1,9 @@
 cmake_minimum_required(VERSION 3.12.0)
+
+# Use toolchain's MPI wrappers to avoid glibc conflicts
+set(CMAKE_C_COMPILER "/u/sw/toolchains/gcc-glibc/11.2.0/base/bin/mpicc")
+set(CMAKE_CXX_COMPILER "/u/sw/toolchains/gcc-glibc/11.2.0/base/bin/mpicxx")
+
 project(elliptic LANGUAGES CXX C)
 
 # Set the path to the Boost library
@@ -55,7 +60,6 @@ deal_ii_setup_target(stokes_si_td)
 
 add_executable(parabolic_1D src_parabolic_1D/parabolic_main.cpp src_parabolic_1D/Parabolic.cpp)
 deal_ii_setup_target(parabolic_1D)
-
 
 
 

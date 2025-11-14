@@ -38,6 +38,7 @@ mkdir build
 cd build
 cmake ..
 make
+source ../setup_modules.sh
 ```
 
 ## Running the Project

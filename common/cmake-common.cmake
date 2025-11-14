@@ -14,7 +14,6 @@ endif()
 
 # Locate MPI compiler.
 find_package(MPI REQUIRED)
-set(CMAKE_CXX_COMPILER "${MPI_CXX_COMPILER}")
 
 # Locate Boost.
 find_package(Boost 1.72.0 REQUIRED
