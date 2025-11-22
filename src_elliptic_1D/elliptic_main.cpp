@@ -7,9 +7,7 @@
 #include "Elliptic.hpp"
 
 #ifdef CONVERGENCE
-// Main function.
-int
-main(int /*argc*/, char * /*argv*/[])
+int main(int /*argc*/, char * /*argv*/[])
 {
   // ConvergenceTable table;
 
@@ -70,7 +68,7 @@ main(int /*argc*/, char * /*argv*/[])
 
   return 0;
 }
-#endif //CONVERGENCE
+#endif 
 
 #ifndef CONVERGENCE
 int

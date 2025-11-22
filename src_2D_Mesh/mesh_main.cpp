@@ -14,8 +14,8 @@ int main()
     double h = 0.05;  // Size of each element
 
     // Calculate the number of elements in x and y directions
-    unsigned int num_elements_x = static_cast<unsigned int>((c - a) / h) + 1;
-    unsigned int num_elements_y = static_cast<unsigned int>((d - b) / h) + 1;
+    unsigned int num_elements_x = static_cast<unsigned int>((c - a) / h);
+    unsigned int num_elements_y = static_cast<unsigned int>((d - b) / h);
 
     // Create the mesh
     dealii::Triangulation<2> mesh;

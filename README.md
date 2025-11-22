@@ -36,7 +36,7 @@ This project uses CMake for building. To build the project, navigate to the proj
 ```sh
 mkdir build
 cd build
-cmake ..
+sudo cmake ..
 make
 source ../setup_modules.sh
 ```
