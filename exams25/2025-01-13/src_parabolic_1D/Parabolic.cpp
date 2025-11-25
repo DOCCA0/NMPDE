@@ -1,4 +1,7 @@
 #include "Parabolic.hpp"
+#include <cmath>
+#include <deal.II/grid/grid_generator.h>
+#include <deal.II/fe/mapping_q1.h>
 
 void
 Parabolic::setup()
@@ -9,11 +12,20 @@ Parabolic::setup()
 
     Triangulation<dim> mesh_serial;
 
-    GridIn<dim> grid_in;
-    grid_in.attach_triangulation(mesh_serial);
+    // Allow auto-generation of a simple 1D mesh when requested by name.
+    if (mesh_file_name == "AUTO_1D_10")
+      {
+        // 10 cells on [0,1]
+        GridGenerator::subdivided_hyper_cube(mesh_serial, 10);
+      }
+    else
+      {
+        GridIn<dim> grid_in;
+        grid_in.attach_triangulation(mesh_serial);
 
-    std::ifstream grid_in_file(mesh_file_name);
-    grid_in.read_msh(grid_in_file);
+        std::ifstream grid_in_file(mesh_file_name);
+        grid_in.read_msh(grid_in_file);
+      }
 
     GridTools::partition_triangulation(mpi_size, mesh_serial);
     const auto construction_data = TriangulationDescription::Utilities::
@@ -197,6 +209,32 @@ Parabolic::assemble_matrices(const double &time)
                     fe_values.JxW(q);                  // dx
 #endif //REACTION_COEFFICIENT
 
+#ifdef SUPG
+                  // SUPG stabilization (simplified implementation)
+                  if (use_supg && (kappa != 0.0))
+                    {
+                      const double h_e = cell->diameter();
+                      const double theta_stab = 0.5 * h_e * kappa;
+                      double xi = 1.0;
+                      if (std::abs(theta_stab) > 1e-12)
+                        xi = 1.0 / std::tanh(theta_stab) - 1.0 / theta_stab;
+
+                      const double tau = h_e / (2.0 * kappa) * xi;
+
+                      // contribution from (1/dt) * (u^{n+1}-u^n) term
+                      cell_mass_matrix(i, j) += tau * (1.0 / deltat) *
+                                                 fe_values.shape_value(j, q) *
+                                                 (kappa * fe_values.shape_grad(i, q)[0]) *
+                                                 fe_values.JxW(q);
+
+                      // contribution from advection term: kappa * u_x
+                      cell_stiffness_matrix(i, j) += tau * kappa *
+                                                     fe_values.shape_grad(j, q)[0] *
+                                                     (kappa * fe_values.shape_grad(i, q)[0]) *
+                                                     fe_values.JxW(q);
+                    }
+#endif //SUPG
+
                 }
             }
         }
@@ -330,8 +368,8 @@ Parabolic::assemble_rhs(const double &time)
               // tag) is that of one of the Neumann boundaries, we assemble the
               // boundary integral.
               if (cell->face(face_number)->at_boundary() &&
-                  (cell->face(face_number)->boundary_id() == 1) ||
-                  (cell->face(face_number)->boundary_id() == 3))
+                  ((cell->face(face_number)->boundary_id() == 1) ||
+                   (cell->face(face_number)->boundary_id() == 3)))
                 {
                   fe_values_boundary.reinit(cell, face_number);
                   
@@ -372,6 +410,8 @@ Parabolic::assemble_rhs(const double &time)
     //boundary_functions[0] = &zero_function;
     function_g.set_time(time);
     boundary_functions[0] = &function_g;
+    // Also set boundary id 1 (right boundary) to same Dirichlet profile
+    boundary_functions[1] = &function_g;
     //boundary_functions[1] = &function_g;
     //boundary_functions[2] = &function_g;
 

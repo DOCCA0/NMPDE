@@ -31,17 +31,21 @@
 
 #include <fstream>
 #include <iostream>
+#include <cmath>
 
 using namespace dealii;
 
-#define NEUMANN
-#define ROBIN
-#define CONVERGENCE
-//#define SPATIAL_CONVERGENCE
+
+// #define NEUMANN
+// #define ROBIN
+// #define CONVERGENCE
+// #define SPATIAL_CONVERGENCE
 #define TRANSPORT_COEFFICIENT
 #define MUCOEFFICIENT
-#define REACTION_COEFFICIENT
-#define CONSERVATIVE_TRANSPORT_COEFFICIENT
+// #define REACTION_COEFFICIENT
+// #define CONSERVATIVE_TRANSPORT_COEFFICIENT
+
+#define SUPG
 
 // Class representing the non-linear diffusion problem.
 class Parabolic
@@ -68,23 +72,24 @@ public:
   class TransportCoefficient : public Function<dim>
   {
   public:
+    TransportCoefficient(const double k = 1.0) : kappa(k) {}
+
     virtual void
     vector_value(const Point<dim> & /*p*/,
                  Vector<double> &values) const override
     {
-      values[0] = 1.0;
-      //values[1] = 1.0;
+      values[0] = kappa;
     }
 
     virtual double
     value(const Point<dim> & /*p*/,
-          const unsigned int component = 0) const override
+          const unsigned int /*component*/ = 0) const override
     {
-      if (component == 0)
-        return 1.0;
-      else
-        return 1.0;
+      return kappa;
     }
+
+  private:
+    double kappa;
 
   };
 #endif //TRANSPORT_COEFFICIENT
@@ -166,8 +171,9 @@ public:
     value(const Point<dim> &p,
           const unsigned int /*component*/ = 0) const override
     {   
-      double t = get_time();
-      return 2.0* std::exp(-t);
+
+      (void)p;
+      return 0.0;
     }
   };
 
@@ -191,8 +197,13 @@ public:
     value(const Point<dim> &p,
           const unsigned int /*component*/ = 0) const override
     {
-      double t = get_time();
-      return 0.0;
+      // For the exam: Dirichlet boundaries are constants
+      // alpha = 0 at x=0 and beta = 1 at x=1 (time-independent).
+      const double x = p[0];
+      if (std::abs(x) < 1e-12)
+        return 0.0;
+      else
+        return 1.0;
     }
   };
 
@@ -253,7 +264,9 @@ public:
        const unsigned int &r_,
        const double       &T_,
        const double       &deltat_,
-       const double       &theta_)
+       const double       &theta_,
+       const double       &kappa_ = 1.0,
+       const bool         &use_supg_ = false)
     : mpi_size(Utilities::MPI::n_mpi_processes(MPI_COMM_WORLD))
     , mpi_rank(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD))
     , pcout(std::cout, mpi_rank == 0)
@@ -262,6 +275,9 @@ public:
     , r(r_)
     , deltat(deltat_)
     , theta(theta_)
+    , kappa(kappa_)
+    , transport_coefficient(kappa_)
+    , use_supg(use_supg_)
     , mesh(MPI_COMM_WORLD)
   {}
 
@@ -314,7 +330,10 @@ protected:
 
 
 #ifdef TRANSPORT_COEFFICIENT
+  // Transport coefficient magnitude (kappa) and runtime SUPG toggle.
+  const double kappa;
   TransportCoefficient transport_coefficient;
+  const bool use_supg;
 #endif //TRANSPORT_COEFFICIENT
 
 #ifdef CONSERVATIVE_TRANSPORT_COEFFICIENT

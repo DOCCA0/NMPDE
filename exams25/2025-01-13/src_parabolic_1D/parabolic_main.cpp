@@ -2,6 +2,10 @@
 
 #include "Parabolic.hpp"
 #include <deal.II/base/convergence_table.h>
+#include <fstream>
+
+#include "Parabolic.hpp"
+#include <deal.II/base/convergence_table.h>
 
 
 #ifdef CONVERGENCE
@@ -145,23 +149,40 @@ main(int argc, char *argv[])
 {
   Utilities::MPI::MPI_InitFinalize mpi_init(argc, argv);
 
-  const std::string  mesh_file_name = "../mesh/m1.msh";
-  
-  //const std::string  mesh_file_name = "../mesh/square_mesh.msh";
-  const unsigned int degree         = 2;
-  const double T      = 2.0;
-  const double deltat = 0.01;
-  const double theta  = 0.5;
+  // Default run: Exercise 1.5 settings
+  std::string mesh_file_name = "AUTO_1D_10"; // auto-generate 10-element 1D mesh
+  unsigned int degree = 1;                    // piecewise linear
+  double T = 1.0;
+  double deltat = 0.01;                       // time step
+  double theta = 1.0;                         // backward Euler
+  double kappa = 1.0;                        // transport coefficient
+  bool use_supg = false;                      // SUPG toggle
 
-  Parabolic problem(mesh_file_name, degree, T, deltat, theta);
+
+  if (argc > 1)
+    mesh_file_name = argv[1];
+  if (argc > 2)
+    degree = std::stoi(argv[2]);
+  if (argc > 3)
+    T = std::stod(argv[3]);
+  if (argc > 4)
+    deltat = std::stod(argv[4]);
+  if (argc > 5)
+    theta = std::stod(argv[5]);
+  if (argc > 6)
+    kappa = std::stod(argv[6]);
+  if (argc > 7)
+    use_supg = (std::stoi(argv[7]) != 0);
+
+  Parabolic problem(mesh_file_name, degree, T, deltat, theta, kappa, use_supg);
 
   problem.setup();
   problem.solve();
 
-  const double error_L2 = problem.compute_error(VectorTools::L2_norm);
-  const double error_H1 = problem.compute_error(VectorTools::H1_norm);
-  printf("L2 error: %e\n", error_L2);
-  printf("H1 error: %e\n", error_H1);
+  // const double error_L2 = problem.compute_error(VectorTools::L2_norm);
+  // const double error_H1 = problem.compute_error(VectorTools::H1_norm);
+  // printf("L2 error: %e\n", error_L2);
+  // printf("H1 error: %e\n", error_H1);
 
 
 
