@@ -241,6 +241,13 @@ Stokes::assemble()
                                    fe_values[velocity].gradient(j, q)) *
                     fe_values.JxW(q);
 
+                  // Reaction term.
+                  cell_matrix(i, j) +=
+                    alpha *
+                    scalar_product(fe_values[velocity].value(i, q),
+                                   fe_values[velocity].value(j, q)) *
+                    fe_values.JxW(q);
+
                   // Pressure term in the momentum equation.
                   cell_matrix(i, j) -= fe_values[velocity].divergence(i, q) *
                                        fe_values[pressure].value(j, q) *

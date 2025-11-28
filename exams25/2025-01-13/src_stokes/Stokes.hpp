@@ -122,7 +122,6 @@ public:
     }
 
   protected:
-    const double alpha = 1.0;
   };
 
   // Since we're working with block matrices, we need to make our own
@@ -313,6 +312,9 @@ protected:
 
   // Kinematic viscosity [m2/s].
   const double nu = 1;
+
+  // Reaction coefficient.
+  const double alpha = 50;
 
 #ifdef NEUMANN_CONDITION
   // Outlet pressure [Pa].

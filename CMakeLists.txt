@@ -63,6 +63,8 @@ include(common/cmake-common.cmake)
 
 
 
-add_executable(parabolic_1D_250113 exams25/2025-01-13/src_parabolic_1D/parabolic_main.cpp exams25/2025-01-13/src_parabolic_1D/Parabolic.cpp)
-deal_ii_setup_target(parabolic_1D_250113)
+#add_executable(parabolic_1D_250113 exams25/2025-01-13/src_parabolic_1D/parabolic_main.cpp exams25/2025-01-13/src_parabolic_1D/Parabolic.cpp)
+#deal_ii_setup_target(parabolic_1D_250113)
 
+add_executable(src_stokes exams25/2025-01-13/src_stokes/stokes_main.cpp exams25/2025-01-13/src_stokes/Stokes.cpp)
+deal_ii_setup_target(src_stokes)
