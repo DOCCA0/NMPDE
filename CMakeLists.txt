@@ -64,5 +64,7 @@ include(common/cmake-common.cmake)
 
 
 
-add_executable(src_stokes exams25/2025-02-10/src_elliptic_1D/elliptic_main.cpp exams25/2025-02-10/src_elliptic_1D/Elliptic.cpp)
+add_executable(elliptic_main0210
+        exams25/2025-02-10/src_elliptic_1D/elliptic_main.cpp
+        exams25/2025-02-10/src_elliptic_1D/Elliptic.cpp)
 deal_ii_setup_target(elliptic_main0210)
