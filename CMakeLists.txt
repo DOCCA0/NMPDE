@@ -65,6 +65,6 @@ include(common/cmake-common.cmake)
 
 
 add_executable(elliptic_main0210
-        exams25/2025-02-10/src_elliptic_1D/elliptic_main.cpp
-        exams25/2025-02-10/src_elliptic_1D/Elliptic.cpp)
+        exams25/2025-02-10/e1/elliptic_main.cpp
+        exams25/2025-02-10/e1/Elliptic.cpp)
 deal_ii_setup_target(elliptic_main0210)
